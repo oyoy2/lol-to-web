@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    <title>艾欧尼亚隐藏战绩查询</title>
+    <style>
+        body {
+          font-family: 'BeaufortforLOL-Bold', sans-serif;
+          background-color: #23272a;
+          color: #f2f2f2;
+          margin: 0;
+          padding: 10px;
+          line-height: 1.4;
+        }
+
+
+
+        .container {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background-color: #181a1c;
+          border: 3px solid #c9b686;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+          width: 50%;
+          margin: 0 auto;
+          text-align: center;
+          border-radius: 20px;
+          background-image: url('/static/bg/bg.png');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+
+        .search-box {
+            width: 70%;
+            margin: 0 auto;
+          display: flex;
+          align-items: center;
+
+        }
+
+        .search-input {
+          flex-grow: 1;
+          padding: 10px;
+          border: 1px solid #c9b686;
+          border-radius: 4px;
+          background-color: #30343a;
+          color: #f2f2f2;
+        }
+
+        .search-button {
+
+          padding: 10px 50px;
+          background-color: #c9b686;
+          color: #23272a;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          margin-left: 10px;
+          font-family: 'BeaufortforLOL-Bold', sans-serif;
+        }
+        .login-button {
+          padding: 10px 20px;
+          background-color: #555;
+          color: #f2f2f2;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          margin-left: 10px;
+          font-family: 'BeaufortforLOL-Bold', sans-serif;
+        }
+        @media (max-width: 768px) {
+          .container {
+            width: 90%;
+            max-width: 400px;
+            padding: 30px; /* 减少 padding */
+          }
+
+          h1 {
+            font-size: 24px; /* 减小标题字号 */
+            margin-bottom: 20px;
+          }
+
+          .search-box {
+            flex-direction: column;
+          }
+
+          .search-input, .search-button, .login-button {
+            font-size: 16px; /* 稍微增大字号 */
+            margin-bottom: 15px;
+            padding: 12px; /* 增加 padding */
+            border-radius: 8px; /* 增大圆角 */
+          }
+
+          .search-button, .login-button {
+            width: 100%;
+          }
+        }
+        .link{
+            margin-top: 20px;
+        }
+        .container p {
+          font-family: Bebas Neue, sans-serif;
+          color: #ffffff;
+          font-size: 16px;
+          line-height: 1.2em;
+          text-align: center;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .container a {
+          text-decoration: none;
+          color: #ffa103;
+        }
+
+        /* 可选的悬停效果 */
+        .container a:hover {
+          color: #C0C0C0;
+        }
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+      <h1>艾欧尼亚战绩查询</h1>
+      <div class="search-box">
+        <input class="search-input" type="text" id="summonerName" placeholder="请输入召唤师名称">
+        <button class="search-button" onclick="search()">查询</button>
+      </div>
+        <div class="link">
+            <p>本项目开源 <a href="https://github.com/oyoy2/"><i class="fab fa-github"></i> GitHub</a></p>
+            <p>联系方式：<a href="mailto:Genz0127@outlook.com"><i class="fas fa-envelope"></i> Genz0127@outlook.com</a></p>
+        </div>
+    </div>
+
+    <script>
+        const searchButton = document.querySelector('.search-button');
+        searchButton.addEventListener('click', () => {
+          const summonerName = document.getElementById('summonerName').value;
+          fetch('/check_login')
+            .then(response => response.json())
+            .then(data => {
+              if (data.status) {
+                window.location.href = `/search?summonerName=${summonerName}`;
+              } else {
+                window.location.href = '/login';
+              }
+            });
+        });
+    </script>
+</body>
+</html>

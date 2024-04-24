@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>艾欧尼亚隐藏战绩查询</title>
+    <style>
+        body {
+          font-family: 'BeaufortforLOL-Bold', sans-serif;
+          background-color: #23272a;
+          color: #f2f2f2;
+          margin: 0;
+          padding: 10px;
+          font-size: 12px;
+          line-height: 1.4;
+        }
+
+        .game-info {
+            margin: 0 auto;
+          order: -1;
+          background-color: #181a1c;
+          border: 2px solid #c9b686;
+          display: flex;
+          border-radius: 8px
+
+        }
+
+        .game-info p {
+          font-size: 14px;
+          padding: 3px;
+        }
+
+        .container {
+          background-color: #181a1c;
+          border: 2px solid #c9b686;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            padding: 10px;
+          width: 70%;
+          margin: 0 auto;
+          text-align: center;
+          border-radius: 8px;
+          background-image: url('/static/bg/bg1.png');
+          background-size: cover;
+        }
+
+        .search-box {
+          display: flex;
+          align-items: center;
+          margin-bottom: 20px;
+        }
+
+        .search-input {
+          flex-grow: 1;
+          padding: 10px;
+          border: 1px solid #c9b686;
+          border-radius: 4px;
+          background-color: #30343a;
+          color: #f2f2f2;
+        }
+
+        .search-button {
+          padding: 10px 20px;
+          background-color: #c9b686;
+          color: #23272a;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          margin-left: 10px;
+          font-family: 'BeaufortforLOL-Bold', sans-serif;
+        }
+
+        /* 段位信息 */
+        #rankInfo {
+          display: flex;
+          justify-content: space-around;
+          margin-bottom: 20px;
+        }
+
+        .rank {
+          display: flex;
+          align-items: center;
+        }
+
+        .rank img {
+          width: 50px;
+          margin-right: 15px;
+        }
+
+        #rankInfo div {
+          border: 1px solid #c9b686;
+          padding: 15px;
+          border-radius: 4px;
+          text-align: center;
+          background-color: #30343a;
+        }
+
+        .game {
+          display: flex;
+          flex-direction: column;
+          border: 1px solid #c9b686;
+          margin-bottom: 10px;
+          padding: 5px;
+          border-radius: 4px;
+          background-color: #30343a;
+        }
+        .participants {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-around;
+        }
+
+        .blue-team,
+        .red-team {
+          display: flex;
+        }
+
+        .blue-team {
+          background-color: rgba(113, 194, 241, 0.5);
+          border-radius: 4px;
+          padding: 10px;
+        }
+
+        .red-team {
+          background-color: rgba(243, 129, 117, 0.5);
+          border-radius: 4px;
+          padding: 10px;
+        }
+
+
+        .participant {
+          width: 100%;
+            height: 40px;
+          border: 1px solid #c9b686;
+          border-radius: 4px;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .participant h4 {
+            margin: auto;
+          color: #f2f2f2;
+        }
+
+        .participant:hover {
+          transform: scale(1.05);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .participant:active {
+          transform: scale(0.95);
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .participant img {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+        }
+
+        .participant .kills {
+          color: #4caf50;
+        }
+
+        .participant .deaths {
+          color: #f44336;
+        }
+
+        .participant .assists {
+          color: #f2f2f2;
+        }
+
+        .damage,
+        .gold,
+        .title {
+          margin: 0 auto;
+          color: #f2f2f2;
+        }
+
+        .kda {
+          margin: 0 auto;
+          padding-left: 1%;
+          color: #f2f2f2;
+        }
+
+        .loading-spinner,
+        .loading-indicator {
+          margin: 0 auto;
+          width: 30px;
+          height: 30px;
+          border: 5px solid #c9b686;
+          border-top-color: #007bff;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        .match-history-container {
+          display: flex;
+          height: 690px;
+        }
+
+        .match-list {
+          width: 20%;
+          overflow-y: auto;
+          border: 1px solid #c9b686;
+          height: 690px;
+          background-color: #30343a;
+        }
+
+        .match-details,
+        .detailed-Stats {
+          width: 80%;
+          height: 90%;
+          max-height: 690px;
+          background-color: #181a1c;
+          border: 2px solid #c9b686;
+            opacity: 0.9;
+        }
+
+        .detailed-Stats {
+          display: none;
+        }
+
+        .switch {
+          height: 10%;
+          width: 10%;
+          background-color: #c9b686;
+          color: #23272a;
+          border-radius: 4px;
+          margin: auto;
+          font-family: 'BeaufortforLOL-Bold', sans-serif;
+        }
+
+        .game-list-item {
+          display: flex;
+          padding: 5px;
+          border-bottom: 1px solid #444;
+          cursor: pointer;
+          transition: background-color 0.2s ease, transform 0.2s ease;
+          font-weight: bold;
+          color: #f2f2f2;
+          font-size: 12px;
+        }
+
+        .game-list-item img {
+          width: 40px;
+          height: 40px;
+          margin-right: 5px;
+          border-radius: 50%;
+        }
+
+        .game-list-item p {
+          margin: auto 0;
+        }
+
+        .champion-icon {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          transition: opacity 1s ease-in-out, transform 0.3s ease;
+        }
+
+        .win {
+          background-color: rgba(117, 198, 243, 0.7);
+        }
+
+        .lose {
+          background-color: rgba(243, 139, 130, 0.7);
+        }
+
+        .items {
+          margin: auto;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .items img {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          flex: 0 0 calc(33.33% - 10px);
+        }
+
+        .selected {
+          background-color: #c9b686;
+        }
+
+        .spell {
+          margin: auto;
+          display: flex;
+        }
+
+        .spell img {
+          width: 30px;
+          height: 30px;
+          margin-bottom: 5px;
+          border-radius: 50%;
+        }
+        .detail {
+          display: none;
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background-color: #23272a;
+            border: 2px solid #c9b686;
+            padding: 10px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+          border-radius: 8px;
+          overflow-wrap: break-word;
+          max-width: 90vw;
+          color: #f2f2f2;
+
+        }
+
+        .detail p {
+          margin-bottom: 5px;
+          font-size: 14px;
+          line-height: 1.5;
+          border: 2px solid #c9b686;
+        }
+
+        .detail p:last-child {
+          margin-bottom: 0;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>英雄联盟战绩查询</h1>
+        <div class="search-box">
+            <input class="search-input" type="text" id="summonerName" placeholder="请输入召唤师名称">
+            <button class="search-button" onclick="search()">查询</button>
+        </div>
+        <h2 id="summonerNameDisplay"></h2>
+        <div id="info">
+            <div id="rankInfo"></div>
+            <div class="match-history-container">
+                <div class="match-list" id="matchList">
+                </div>
+                <div class="match-details" id="matchDetails"></div>
+                <div class="detailed-Stats" id="detailedStats"></div>
+                <div id="detailDiv" class="detail">
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    const championData = {"Aatrox": {"id": "Aatrox", "name": "暗裔剑魔"}, "Ahri": {"id": "Ahri", "name": "九尾妖狐"}, "Akali": {"id": "Akali", "name": "离群之刺"}, "Akshan": {"id": "Akshan", "name": "影哨"}, "Alistar": {"id": "Alistar", "name": "牛头酋长"}, "Amumu": {"id": "Amumu", "name": "殇之木乃伊"}, "Anivia": {"id": "Anivia", "name": "冰晶凤凰"}, "Annie": {"id": "Annie", "name": "黑暗之女"}, "Aphelios": {"id": "Aphelios", "name": "残月之肃"}, "Ashe": {"id": "Ashe", "name": "寒冰射手"}, "AurelionSol": {"id": "AurelionSol", "name": "铸星龙王"}, "Azir": {"id": "Azir", "name": "沙漠皇帝"}, "Bard": {"id": "Bard", "name": "星界游神"}, "Belveth": {"id": "Belveth", "name": "虚空女皇"}, "Blitzcrank": {"id": "Blitzcrank", "name": "蒸汽机器人"}, "Brand": {"id": "Brand", "name": "复仇焰魂"}, "Braum": {"id": "Braum", "name": "弗雷尔卓德之心"}, "Briar": {"id": "Briar", "name": "狂厄蔷薇"}, "Caitlyn": {"id": "Caitlyn", "name": "皮城女警"}, "Camille": {"id": "Camille", "name": "青钢影"}, "Cassiopeia": {"id": "Cassiopeia", "name": "魔蛇之拥"}, "Chogath": {"id": "Chogath", "name": "虚空恐惧"}, "Corki": {"id": "Corki", "name": "英勇投弹手"}, "Darius": {"id": "Darius", "name": "诺克萨斯之手"}, "Diana": {"id": "Diana", "name": "皎月女神"}, "Draven": {"id": "Draven", "name": "荣耀行刑官"}, "DrMundo": {"id": "DrMundo", "name": "祖安狂人"}, "Ekko": {"id": "Ekko", "name": "时间刺客"}, "Elise": {"id": "Elise", "name": "蜘蛛女皇"}, "Evelynn": {"id": "Evelynn", "name": "痛苦之拥"}, "Ezreal": {"id": "Ezreal", "name": "探险家"}, "Fiddlesticks": {"id": "Fiddlesticks", "name": "远古恐惧"}, "Fiora": {"id": "Fiora", "name": "无双剑姬"}, "Fizz": {"id": "Fizz", "name": "潮汐海灵"}, "Galio": {"id": "Galio", "name": "正义巨像"}, "Gangplank": {"id": "Gangplank", "name": "海洋之灾"}, "Garen": {"id": "Garen", "name": "德玛西亚之力"}, "Gnar": {"id": "Gnar", "name": "迷失之牙"}, "Gragas": {"id": "Gragas", "name": "酒桶"}, "Graves": {"id": "Graves", "name": "法外狂徒"}, "Gwen": {"id": "Gwen", "name": "灵罗娃娃"}, "Hecarim": {"id": "Hecarim", "name": "战争之影"}, "Heimerdinger": {"id": "Heimerdinger", "name": "大发明家"}, "Hwei": {"id": "Hwei", "name": "异画师"}, "Illaoi": {"id": "Illaoi", "name": "海兽祭司"}, "Irelia": {"id": "Irelia", "name": "刀锋舞者"}, "Ivern": {"id": "Ivern", "name": "翠神"}, "Janna": {"id": "Janna", "name": "风暴之怒"}, "JarvanIV": {"id": "JarvanIV", "name": "德玛西亚皇子"}, "Jax": {"id": "Jax", "name": "武器大师"}, "Jayce": {"id": "Jayce", "name": "未来守护者"}, "Jhin": {"id": "Jhin", "name": "戏命师"}, "Jinx": {"id": "Jinx", "name": "暴走萝莉"}, "Kaisa": {"id": "Kaisa", "name": "虚空之女"}, "Kalista": {"id": "Kalista", "name": "复仇之矛"}, "Karma": {"id": "Karma", "name": "天启者"}, "Karthus": {"id": "Karthus", "name": "死亡颂唱者"}, "Kassadin": {"id": "Kassadin", "name": "虚空行者"}, "Katarina": {"id": "Katarina", "name": "不祥之刃"}, "Kayle": {"id": "Kayle", "name": "正义天使"}, "Kayn": {"id": "Kayn", "name": "影流之镰"}, "Kennen": {"id": "Kennen", "name": "狂暴之心"}, "Khazix": {"id": "Khazix", "name": "虚空掠夺者"}, "Kindred": {"id": "Kindred", "name": "永猎双子"}, "Kled": {"id": "Kled", "name": "暴怒骑士"}, "KogMaw": {"id": "KogMaw", "name": "深渊巨口"}, "KSante": {"id": "KSante", "name": "纳祖芒荣耀"}, "Leblanc": {"id": "Leblanc", "name": "诡术妖姬"}, "LeeSin": {"id": "LeeSin", "name": "盲僧"}, "Leona": {"id": "Leona", "name": "曙光女神"}, "Lillia": {"id": "Lillia", "name": "含羞蓓蕾"}, "Lissandra": {"id": "Lissandra", "name": "冰霜女巫"}, "Lucian": {"id": "Lucian", "name": "圣枪游侠"}, "Lulu": {"id": "Lulu", "name": "仙灵女巫"}, "Lux": {"id": "Lux", "name": "光辉女郎"}, "Malphite": {"id": "Malphite", "name": "熔岩巨兽"}, "Malzahar": {"id": "Malzahar", "name": "虚空先知"}, "Maokai": {"id": "Maokai", "name": "扭曲树精"}, "MasterYi": {"id": "MasterYi", "name": "无极剑圣"}, "Milio": {"id": "Milio", "name": "明烛"}, "MissFortune": {"id": "MissFortune", "name": "赏金猎人"}, "MonkeyKing": {"id": "MonkeyKing", "name": "齐天大圣"}, "Mordekaiser": {"id": "Mordekaiser", "name": "铁铠冥魂"}, "Morgana": {"id": "Morgana", "name": "堕落天使"}, "Naafiri": {"id": "Naafiri", "name": "百裂冥犬"}, "Nami": {"id": "Nami", "name": "唤潮鲛姬"}, "Nasus": {"id": "Nasus", "name": "沙漠死神"}, "Nautilus": {"id": "Nautilus", "name": "深海泰坦"}, "Neeko": {"id": "Neeko", "name": "万花通灵"}, "Nidalee": {"id": "Nidalee", "name": "狂野女猎手"}, "Nilah": {"id": "Nilah", "name": "不羁之悦"}, "Nocturne": {"id": "Nocturne", "name": "永恒梦魇"}, "Nunu": {"id": "Nunu", "name": "雪原双子"}, "Olaf": {"id": "Olaf", "name": "狂战士"}, "Orianna": {"id": "Orianna", "name": "发条魔灵"}, "Ornn": {"id": "Ornn", "name": "山隐之焰"}, "Pantheon": {"id": "Pantheon", "name": "不屈之枪"}, "Poppy": {"id": "Poppy", "name": "圣锤之毅"}, "Pyke": {"id": "Pyke", "name": "血港鬼影"}, "Qiyana": {"id": "Qiyana", "name": "元素女皇"}, "Quinn": {"id": "Quinn", "name": "德玛西亚之翼"}, "Rakan": {"id": "Rakan", "name": "幻翎"}, "Rammus": {"id": "Rammus", "name": "披甲龙龟"}, "RekSai": {"id": "RekSai", "name": "虚空遁地兽"}, "Rell": {"id": "Rell", "name": "镕铁少女"}, "Renata": {"id": "Renata", "name": "炼金男爵"}, "Renekton": {"id": "Renekton", "name": "荒漠屠夫"}, "Rengar": {"id": "Rengar", "name": "傲之追猎者"}, "Riven": {"id": "Riven", "name": "放逐之刃"}, "Rumble": {"id": "Rumble", "name": "机械公敌"}, "Ryze": {"id": "Ryze", "name": "符文法师"}, "Samira": {"id": "Samira", "name": "沙漠玫瑰"}, "Sejuani": {"id": "Sejuani", "name": "北地之怒"}, "Senna": {"id": "Senna", "name": "涤魂圣枪"}, "Seraphine": {"id": "Seraphine", "name": "星籁歌姬"}, "Sett": {"id": "Sett", "name": "腕豪"}, "Shaco": {"id": "Shaco", "name": "恶魔小丑"}, "Shen": {"id": "Shen", "name": "暮光之眼"}, "Shyvana": {"id": "Shyvana", "name": "龙血武姬"}, "Singed": {"id": "Singed", "name": "炼金术士"}, "Sion": {"id": "Sion", "name": "亡灵战神"}, "Sivir": {"id": "Sivir", "name": "战争女神"}, "Skarner": {"id": "Skarner", "name": "上古领主"}, "Smolder": {"id": "Smolder", "name": "炽炎雏龙"}, "Sona": {"id": "Sona", "name": "琴瑟仙女"}, "Soraka": {"id": "Soraka", "name": "众星之子"}, "Swain": {"id": "Swain", "name": "诺克萨斯统领"}, "Sylas": {"id": "Sylas", "name": "解脱者"}, "Syndra": {"id": "Syndra", "name": "暗黑元首"}, "TahmKench": {"id": "TahmKench", "name": "河流之王"}, "Taliyah": {"id": "Taliyah", "name": "岩雀"}, "Talon": {"id": "Talon", "name": "刀锋之影"}, "Taric": {"id": "Taric", "name": "瓦洛兰之盾"}, "Teemo": {"id": "Teemo", "name": "迅捷斥候"}, "Thresh": {"id": "Thresh", "name": "魂锁典狱长"}, "Tristana": {"id": "Tristana", "name": "麦林炮手"}, "Trundle": {"id": "Trundle", "name": "巨魔之王"}, "Tryndamere": {"id": "Tryndamere", "name": "蛮族之王"}, "TwistedFate": {"id": "TwistedFate", "name": "卡牌大师"}, "Twitch": {"id": "Twitch", "name": "瘟疫之源"}, "Udyr": {"id": "Udyr", "name": "兽灵行者"}, "Urgot": {"id": "Urgot", "name": "无畏战车"}, "Varus": {"id": "Varus", "name": "惩戒之箭"}, "Vayne": {"id": "Vayne", "name": "暗夜猎手"}, "Veigar": {"id": "Veigar", "name": "邪恶小法师"}, "Velkoz": {"id": "Velkoz", "name": "虚空之眼"}, "Vex": {"id": "Vex", "name": "愁云使者"}, "Vi": {"id": "Vi", "name": "皮城执法官"}, "Viego": {"id": "Viego", "name": "破败之王"}, "Viktor": {"id": "Viktor", "name": "机械先驱"}, "Vladimir": {"id": "Vladimir", "name": "猩红收割者"}, "Volibear": {"id": "Volibear", "name": "不灭狂雷"}, "Warwick": {"id": "Warwick", "name": "祖安怒兽"}, "Xayah": {"id": "Xayah", "name": "逆羽"}, "Xerath": {"id": "Xerath", "name": "远古巫灵"}, "XinZhao": {"id": "XinZhao", "name": "德邦总管"}, "Yasuo": {"id": "Yasuo", "name": "疾风剑豪"}, "Yone": {"id": "Yone", "name": "封魔剑魂"}, "Yorick": {"id": "Yorick", "name": "牧魂人"}, "Yuumi": {"id": "Yuumi", "name": "魔法猫咪"}, "Zac": {"id": "Zac", "name": "生化魔人"}, "Zed": {"id": "Zed", "name": "影流之主"}, "Zeri": {"id": "Zeri", "name": "祖安花火"}, "Ziggs": {"id": "Ziggs", "name": "爆破鬼才"}, "Zilean": {"id": "Zilean", "name": "时光守护者"}, "Zoe": {"id": "Zoe", "name": "暮光星灵"}, "Zyra": {"id": "Zyra", "name": "荆棘之兴"}}
+    const rank_mapping = {
+        'IRON': '黑铁',
+        'BRONZE': '青铜',
+        'SILVER': '白银',
+        'GOLD': '黄金',
+        'PLATINUM': '铂金',
+        'EMERALD': '翡翠',
+        'DIAMOND': '钻石',
+        'MASTER': '大师',
+        'GRANDMASTER': '宗师',
+        'CHALLENGER': '王者'
+    };
+    const spells = {
+      "1": "SummonerBoost",
+      "3": "SummonerExhaust",
+      "4": "SummonerFlash",
+      "6": "SummonerHaste",
+      "7": "SummonerHeal",
+      "11": "SummonerSmite",
+      "12": "SummonerTeleport",
+      "13": "SummonerMana",
+      "14": "SummonerDot",
+      "21": "SummonerBarrier",
+      "30": "SummonerPoroRecall",
+      "31": "SummonerPoroThrow",
+      "32": "SummonerSnowball",
+      "39": "SummonerSnowURFSnowball_Mark",
+      "54": "Summoner_UltBookPlaceholder",
+      "55": "Summoner_UltBookSmitePlaceholder",
+      "2201": "SummonerCherryHold",
+      "2202": "SummonerCherryFlash"
+    };
+    const lolTranslations = {
+          assists: '助攻',
+          causedEarlySurrender: '导致提前投降',
+          champLevel: '英雄等级',
+          combatPlayerScore: '战斗得分',
+          damageDealtToObjectives: '对建筑造成的伤害',
+          damageDealtToTurrets: '对防御塔造成的伤害',
+          damageSelfMitigated: '自我减免的伤害',
+          deaths: '死亡次数',
+          doubleKills: '双杀',
+          earlySurrenderAccomplice: '提前投降同谋',
+          firstBloodAssist: '第一滴血助攻',
+          firstBloodKill: '第一滴血',
+          firstInhibitorAssist: '首个水晶枢纽助攻',
+          firstInhibitorKill: '首个水晶枢纽击杀',
+          firstTowerAssist: '首个防御塔助攻',
+          firstTowerKill: '首个防御塔击杀',
+          gameEndedInEarlySurrender: '游戏以提前投降结束',
+          gameEndedInSurrender: '游戏以投降结束',
+          goldEarned: '获得的金币',
+          goldSpent: '花费的金币',
+          inhibitorKills: '水晶枢纽击杀数',
+          item0: '物品栏第 1 个物品',
+          item1: '物品栏第 2 个物品',
+          item2: '物品栏第 3 个物品',
+          item3: '物品栏第 4 个物品',
+          item4: '物品栏第 5 个物品',
+          item5: '物品栏第 6 个物品',
+          item6: '饰品',
+          killingSprees: '连续击杀',
+          kills: '击杀数',
+          largestCriticalStrike: '最大暴击',
+          largestKillingSpree: '最大连续击杀',
+          largestMultiKill: '最大多杀',
+          longestTimeSpentLiving: '最长存活时间',
+          magicDamageDealt: '造成的魔法伤害',
+          magicDamageDealtToChampions: '对英雄造成的魔法伤害',
+          magicalDamageTaken: '受到的魔法伤害',
+          neutralMinionsKilled: '击杀的中立野怪',
+          neutralMinionsKilledEnemyJungle: '在敌方野区击杀的中立野怪',
+          neutralMinionsKilledTeamJungle: '在己方野区击杀的中立野怪',
+          objectivePlayerScore: '目标得分',
+          participantId: '参与者 ID',
+          pentaKills: '五杀',
+          perkPrimaryStyle: '基石符文',
+          perkSubStyle: '副系符文',
+          physicalDamageDealt: '造成的物理伤害',
+          physicalDamageDealtToChampions: '对英雄造成的物理伤害',
+          physicalDamageTaken: '受到的物理伤害',
+          quadraKills: '四杀',
+          sightWardsBoughtInGame: '游戏中购买的控制守卫',
+          subteamPlacement: '队伍排名',
+          teamEarlySurrendered: '队伍提前投降',
+          timeCCingOthers: '控制其他玩家的时间',
+          totalDamageDealt: '造成的总伤害',
+          totalDamageDealtToChampions: '对英雄造成的总伤害',
+          totalDamageTaken: '受到的总伤害',
+          totalHeal: '总治疗量',
+          totalMinionsKilled: '击杀的小兵总数',
+          totalPlayerScore: '总得分',
+          totalScoreRank: '总得分排名',
+          totalTimeCrowdControlDealt: '总控制时间',
+          totalUnitsHealed: '治疗的单位总数',
+          tripleKills: '三杀',
+          trueDamageDealt: '造成的真实伤害',
+          trueDamageDealtToChampions: '对英雄造成的真实伤害',
+          trueDamageTaken: '受到的真实伤害',
+          turretKills: '防御塔击杀数',
+          unrealKills: '接近神',
+          visionScore: '视野得分',
+          visionWardsBoughtInGame: '游戏中购买的侦查守卫',
+          wardsKilled: '摧毁的守卫',
+          wardsPlaced: '放置的守卫',
+          win: '胜利'
+        };
+    const whitelistedProperties = [
+          // 伤害相关
+          'damageDealtToObjectives',
+          'damageDealtToTurrets',
+          'damageSelfMitigated',
+          'magicDamageDealtToChampions',
+          'physicalDamageDealtToChampions',
+          'totalDamageDealtToChampions',
+          'trueDamageDealtToChampions',
+
+          // 击杀相关
+          'firstBloodKill',
+          'firstTowerKill',
+          'neutralMinionsKilled',
+          'totalMinionsKilled',
+          'turretKills',
+          'wardsKilled',
+
+          // 视野相关
+          'sightWardsBoughtInGame'
+        ];
+
+    window.onload = function() {
+        document.getElementById("summonerName").value = '{{ summoner_name }}';
+        search()
+    };
+
+
+    const chineseToEnglishRankMapping = {};
+    for (const englishRank in rank_mapping) {
+        const chineseRank = rank_mapping[englishRank];
+        chineseToEnglishRankMapping[chineseRank] = englishRank;
+    }
+    function getEnglishChampionName(chineseName) {
+      for (const englishName in championData) {
+        if (championData[englishName].name === chineseName) {
+          return englishName;
+        }
+      }
+      return "Unknown Champion";
+    }
+    function getChampionImagePath(championName) {
+      const baseUrl = "/static/champion/";
+      const imageExtension = ".png";
+      const EnglishChampionName = getEnglishChampionName(championName);
+      return baseUrl + EnglishChampionName + imageExtension;
+    }
+
+
+    function search() {
+        const summonerName = document.getElementById("summonerName").value;
+        document.getElementById("summonerNameDisplay").textContent = summonerName;
+        document.getElementById("rankInfo").innerHTML = '<div class="loading-indicator"></div>';
+        document.getElementById("matchList").innerHTML = '<div class="loading-indicator"></div>';
+
+        const rankPromise = fetch(`/api/rank?summonerName=${summonerName}`)
+            .then(response => response.json());
+
+        const matchPromise = fetch(`/api/extractdata?summonerName=${summonerName}`)
+            .then(response => response.json());
+
+        rankPromise.then(rankData => {
+            updateRankInfo(rankData);
+
+            matchPromise.then(matchData => {
+                updateMatchHistory(matchData, summonerName);
+            })
+            .catch(error => console.error("获取战绩信息失败:", error));
+        })
+        .catch(error => console.error("获取段位信息失败:", error));
+    }
+
+    function updateRankInfo(data) {
+        const rankInfoDiv = document.getElementById("rankInfo");
+        rankInfoDiv.innerHTML = "";
+
+        for (const queueType of ["单双", "组排","云顶"]) {
+            const rankData = data[queueType];
+            if (rankData) {
+                const rankDiv = document.createElement('div');
+                rankDiv.classList.add('rank');
+                const chineseRankName = rankData.段位.slice(0, 2);
+                const englishRankName = chineseToEnglishRankMapping[chineseRankName] || chineseRankName;
+                const rankImageURL = `/static/Ranked/rank=${englishRankName}.png?t=${Date.now()}`;
+
+                rankDiv.innerHTML = `
+                    <img src="${rankImageURL}" alt="${chineseRankName}">
+                    <h3>${queueType}排位</h3>
+                    <p>段位：${rankData.段位}</p>
+                    <p>胜点：${rankData.点数}</p>
+                    <p>胜场：${rankData.胜场}</p>
+                    <p>负场：${rankData.负场}</p>
+                `;
+
+                rankInfoDiv.appendChild(rankDiv);
+            }
+        }
+    }
+
+    function updateMatchHistory(data,summoner_name) {
+        const matchListDiv = document.getElementById("matchList");
+        matchListDiv.innerHTML = "";
+        const matchDetailsDiv = document.getElementById("matchDetails");
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const participantsDiv = entry.target;
+                    const gameIndex = participantsDiv.dataset.gameIndex;
+                    const game = data[gameIndex];
+                    loadParticipants(game, participantsDiv, gameIndex);
+                    observer.unobserve(participantsDiv);
+                }
+            });
+        });
+
+        data.forEach((game, gameIndex) => {
+            const gameListItem = document.createElement('div');
+            gameListItem.classList.add('game-list-item');
+            console.log(game)
+            fetch(`/api/gamemode?gameModeId=${game.game_info.queueId}`)
+                .then(response => response.json())
+                .then(gameModeData => {
+                    for (let i = 0; i < game.participant_info.length; i++) {
+                        const participant_info = game.participant_info[i];
+                        if (participant_info.summoner_name === summoner_name) {
+                            const participant = game.participants_data[i];
+
+                            if (participant.stats.win) {
+                                gameListItem.classList.add('win');
+                            } else {
+                                gameListItem.classList.add('lose');
+                            }
+
+                            fetch(`/api/champion?championId=${participant.championId}`)
+                                .then(response => response.json())
+                                .then(championdata => {
+                                    const imagePath = getChampionImagePath(championdata.name);
+                                    gameListItem.innerHTML = `
+                                        <img src="${imagePath}" alt="${championdata.name}">
+                                        <p>${gameModeData}</p>
+                                        <p>${new Date(game.game_info.gameCreationDate).toLocaleDateString('cn', { month: 'numeric', day: 'numeric' })}</p>
+
+                                    `;
+                                });
+                            break;
+                        }
+                    }
+                });
+                let currentSelectedItem = null;
+                gameListItem.addEventListener('click', () => {
+                    matchDetailsDiv.innerHTML = "";
+                    const loadingIndicator = document.createElement('div');
+                    loadingIndicator.classList.add('loading-indicator');
+                    loadingIndicator.textContent = "";
+                    const previouslySelectedItem = matchListDiv.querySelector('.game-list-item.selected');
+                    if (previouslySelectedItem) {
+                        previouslySelectedItem.classList.remove('selected');
+                    }
+                    matchDetailsDiv.appendChild(loadingIndicator);
+                    const gameDiv = document.createElement('div');
+                    gameDiv.classList.add('game');
+                    gameDiv.id = `gamedetails`;
+                    const participantsDiv = document.createElement('div');
+                    participantsDiv.classList.add('participants');
+                    participantsDiv.dataset.gameIndex = gameIndex;
+                    gameDiv.appendChild(participantsDiv);
+                    gameListItem.classList.add('selected');
+                    currentSelectedItem = gameListItem;
+                    fetch(`/api/gamemode?gameModeId=${game.game_info.queueId}`)
+                        .then(response => response.json())
+                        .then(gameModeData => {
+                            const gameInfoDiv = document.createElement('div');
+                            gameInfoDiv.classList.add('game-info');
+                            gameInfoDiv.innerHTML = `
+                                <p>游戏模式：${gameModeData}</p>
+                                <p>游戏时间：${new Date(game.game_info.gameCreationDate).toLocaleString()}</p>
+                                <p>游戏时长：${Math.floor(game.game_info.gameDuration / 60)} 分钟</p>
+                            `;
+                            matchDetailsDiv.innerHTML = "";
+                            gameDiv.appendChild(gameInfoDiv);
+                            loadParticipants(game, participantsDiv, gameIndex);
+                            loadingIndicator.remove();
+                            matchDetailsDiv.innerHTML = "";
+                            matchDetailsDiv.appendChild(gameDiv);
+
+                        })
+                        .catch(error => console.error("获取游戏模式信息失败:", error));
+                });
+
+            matchListDiv.appendChild(gameListItem);
+        });
+    }
+
+
+
+    function loadParticipants(game, participantsDiv, gameIndex) {
+      const participantsData = game.participant_info;
+      const participantsStats = game.participants_data;
+
+      const participants = participantsData.map((participant, index) => ({
+        ...participant,
+        stats: participantsStats[index].stats,
+        title: ""
+      }));
+
+      participants.forEach(participant => {
+        const score = calculateScore(participant.stats);
+        participant.title = getTitle(score);
+      });
+
+      participants.forEach((participant, index) => {
+        const participantStatsData = participantsStats[index];
+        const participantDiv = document.createElement('div');
+        const detailDiv = document.createElement('div');
+        participantDiv.classList.add('participant');
+        detailDiv.classList.add('participant');
+        participantDiv.id = `participant-${gameIndex}-${index}`;
+
+        if (participantStatsData.teamId === 100) {
+          participantDiv.classList.add('blue-team');
+        } else {
+          participantDiv.classList.add('red-team');
+        }
+
+        const profileIconUrl = `/static/profileicon/${participant.profile_icon}.png?t=${Date.now()}`;
+
+        const img = document.createElement('img');
+        img.alt = "头像";
+        img.classList.add('champion-icon');
+
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        fetch(`/api/champion?championId=${participantStatsData.championId}`, { signal })
+          .then(response => response.json())
+          .then(championData => {
+              const imgpath = getChampionImagePath(championData.name)
+            img.src = imgpath;
+
+            img.addEventListener('mouseover', () => {
+              img.src = profileIconUrl;
+            });
+
+            img.addEventListener('mouseout', () => {
+              img.src = imgpath;
+            });
+
+            img.onload = () => {
+              img.style.opacity = 1;
+            };
+
+            const nameDiv = document.createElement('h4');
+            nameDiv.innerHTML = `
+              <h4>${participant.summoner_name}</h4>
+            `;
+            participantDiv.insertBefore(img, participantDiv.firstChild);
+            const spell1Id = participantStatsData.spell1Id;
+            const spell2Id = participantStatsData.spell2Id;
+
+            const spell1Key = spells[spell1Id];
+            const spell2Key = spells[spell2Id];
+            const spellDIV = document.createElement('div');
+            spellDIV.classList.add('spell');
+            spellDIV.innerHTML = `
+              <img src="/static/spells/${spell1Key}.png?t=${Date.now()}" alt="召唤师技能1">
+              <img src="/static/spells/${spell2Key}.png?t=${Date.now()}" alt="召唤师技能2">
+            `;
+            const itemsDiv = document.createElement('div');
+            itemsDiv.classList.add('items');
+            const kdaDiv = document.createElement('div');
+            kdaDiv.classList.add('kda');
+
+            const itemIds = [
+              participantStatsData.stats.item0,
+              participantStatsData.stats.item1,
+              participantStatsData.stats.item2,
+              participantStatsData.stats.item3,
+              participantStatsData.stats.item4,
+              participantStatsData.stats.item5,
+              participantStatsData.stats.item6,
+            ];
+            itemIds.forEach(itemId => {
+              const itemImg = document.createElement('img');
+              itemImg.src = `/static/item/${itemId}.png?t=${Date.now()}`;
+              itemImg.alt = `Item ${itemId}`;
+              itemsDiv.appendChild(itemImg);
+            });
+
+            kdaDiv.innerHTML = `
+              <span class="kills">${participantStatsData.stats.kills}</span> /
+              <span class="deaths">${participantStatsData.stats.deaths}</span> /
+              <span class="assists">${participantStatsData.stats.assists}</span>
+            `;
+
+            const damageDiv = document.createElement('div');
+            damageDiv.classList.add('damage');
+            const goldDiv = document.createElement('div');
+            goldDiv.classList.add('gold');
+
+            const totalDamage = participantStatsData.stats.totalDamageDealtToChampions;
+            const totalGold = participantStatsData.stats.goldEarned;
+
+            damageDiv.textContent = `伤害：${totalDamage}`;
+            goldDiv.textContent = `经济：${totalGold}`;
+
+            const titleDiv = document.createElement('div');
+            titleDiv.classList.add('title');
+            titleDiv.textContent = participant.title;
+            const detailIcon = document.createElement('img');
+            detailIcon.src = "static/icon/详情.png";
+            detailIcon.alt = "详情";
+            detailIcon.style = "width: 30px; height: 30px;border-radius: 50%;";
+
+            const detailDiv = document.getElementById('detailDiv');
+            detailDiv.style.display = "none";
+            detailDiv.classList.add("detail");
+            detailIcon.addEventListener('mouseover', () => {
+
+                for (const key in participantStatsData.stats) {
+                  if (participantStatsData.stats.hasOwnProperty(key) && whitelistedProperties.includes(key)) {
+                    const value = participantStatsData.stats[key];
+                    const translatedKey = translate(key);
+                    const p = document.createElement('p');
+                    p.textContent = `${translatedKey}: ${value}`;
+                    detailDiv.appendChild(p);
+                  }
+                }
+              detailDiv.style.display = "block";
+            });
+
+            detailIcon.addEventListener('mouseout', () => {
+              detailDiv.style.display = "none";
+              detailDiv.innerHTML = '';
+            });
+            participantDiv.appendChild(nameDiv)
+            participantDiv.appendChild(spellDIV)
+            participantDiv.appendChild(itemsDiv);
+            participantDiv.appendChild(kdaDiv);
+            participantDiv.appendChild(damageDiv);
+            participantDiv.appendChild(goldDiv);
+            participantDiv.appendChild(titleDiv);
+            participantDiv.appendChild(detailIcon);
+            nameDiv.addEventListener('click', () => {
+              controller.abort();
+              document.getElementById("summonerName").value = participant.summoner_name;
+              document.getElementById("gamedetails").innerHTML = '<div class="loading-indicator"></div>';
+              const summonerName = document.getElementById("summonerName").value;
+                window.location.href = `/search?summonerName=${encodeURIComponent(summonerName)}`; // 更改当前页面 URL
+              search();
+            });
+            img.addEventListener('click', () => {
+              controller.abort();
+              document.getElementById("summonerName").value = participant.summoner_name;
+              document.getElementById("gamedetails").innerHTML = '<div class="loading-indicator"></div>';
+              const summonerName = document.getElementById("summonerName").value;
+                window.location.href = `/search?summonerName=${encodeURIComponent(summonerName)}`; // 更改当前页面 URL
+              search();
+            });
+          })
+          .catch(error => {
+            if (error.name === 'AbortError') {
+              console.log("请求被终止");
+            } else {
+              console.error("获取英雄信息失败:", error);
+            }
+          });
+
+        participantsDiv.appendChild(participantDiv);
+      });
+    }
+    function translate(key) {
+      return lolTranslations[key] || key;
+    }
+    function findChampionNameEN(championNameCN, championData) {
+      for (const championEN in championData) {
+        if (championData[championEN].name === championNameCN) {
+          return championEN;
+        }
+      }
+      console.error(`找不到英雄英文名：${championNameCN}`);
+      return "";
+    }
+
+
+    function calculateScore(stats) {
+      const kda = (Math.pow(stats.kills, 2) + stats.assists) / Math.max(Math.pow(stats.deaths, 2), 1); // 使用平方函数
+      const damageScore = stats.totalDamageDealtToChampions / 1000;
+      return kda * 2 + damageScore;
+    }
+
+
+    function getTitle(score) {
+        if (score < 10) {
+            return "诗人握持";
+        } else if (score < 20) {
+            return "低能玩意";
+        } else if (score < 30) {
+            return "就一牛马";
+        } else if (score < 40) {
+            return "也算个人";
+        } else {
+            return "这是大爹";
+        }
+    }
+
+</script>
+
+</body>
+</html>

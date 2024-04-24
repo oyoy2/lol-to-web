@@ -1,0 +1,224 @@
+[
+    {
+        "queueId": 0,
+        "map": "特殊模式",
+        "description": "特殊模式",
+        "notes": null
+    },
+    {
+        "queueId": 430, 
+        "map": "召唤师峡谷",
+        "description": "匹配模式",
+        "notes": "原 queueId 2"
+    },
+    {
+        "queueId": 420, 
+        "map": "召唤师峡谷",
+        "description": "单双排位",
+        "notes": "原 queueId 4"
+    },
+    {
+        "queueId": 6, 
+        "map": "召唤师峡谷",
+        "description": "5v5 预组队模式",
+        "notes": "游戏模式已弃用" 
+    },
+    {
+        "queueId": 32, 
+        "map": "召唤师峡谷",
+        "description": "人机对战",
+        "notes": "原 queueId 7" 
+    },
+    {
+        "queueId": 460, 
+        "map": "扭曲丛林",
+        "description": "3v3 普通模式",
+        "notes": "原 queueId 8"
+    },
+    {
+        "queueId": 470, 
+        "map": "扭曲丛林",
+        "description": "3v3 灵活排位模式",
+        "notes": "原 queueId 9" 
+    },
+    {
+        "queueId": 400, 
+        "map": "召唤师峡谷",
+        "description": "征召模式",
+        "notes": "原 queueId 14" 
+    },
+    {
+        "queueId": 16, 
+        "map": "水晶之痕",
+        "description": "5v5 水晶之痕盲选模式",
+        "notes": "游戏模式已弃用" 
+    },
+    {
+        "queueId": 17, 
+        "map": "水晶之痕",
+        "description": "5v5 水晶之痕征召模式",
+        "notes": "游戏模式已弃用" 
+    },
+    {
+        "queueId": 25, 
+        "map": "水晶之痕",
+        "description": "水晶之痕人机对战模式",
+        "notes": "游戏模式已弃用" 
+    },
+    {
+        "queueId": 830, 
+        "map": "召唤师峡谷",
+        "description": "人机入门",
+        "notes": "原 queueId 31" 
+    },
+    {
+        "queueId": 840, 
+        "map": "召唤师峡谷",
+        "description": "人机新手",
+        "notes": "原 queueId 32" 
+    },
+    {
+        "queueId": 850, 
+        "map": "召唤师峡谷",
+        "description": "人机中级",
+        "notes": "原 queueId 33" 
+    },
+    {
+        "queueId": 41, 
+        "map": "扭曲丛林",
+        "description": "3v3 组队排位模式",
+        "notes": "游戏模式已弃用" 
+    },
+    {
+        "queueId": 42, 
+        "map": "召唤师峡谷",
+        "description": "组队排位",
+        "notes": "游戏模式已弃用" 
+    },
+    {
+        "queueId": 800, 
+        "map": "扭曲丛林",
+        "description": "对战模式",
+        "notes": "原 queueId 52"
+    },
+    {
+        "queueId": 61, 
+        "map": "召唤师峡谷",
+        "description": "队伍创建",
+        "notes": "游戏模式已弃用" 
+    },
+    {
+        "queueId": 450, 
+        "map": "嚎哭深渊",
+        "description": "极地大乱斗",
+        "notes": "原 queueId 65" 
+    },
+    {
+        "queueId": 67, 
+        "map": "嚎哭深渊",
+        "description": "极地大乱斗人机对战模式",
+        "notes": "游戏模式已弃用" 
+    },
+    {
+        "queueId": 1020, 
+        "map": "召唤师峡谷", 
+        "description": "克隆模式",
+        "notes": "原 queueId 70" 
+    },
+    {
+        "queueId": 72, 
+        "map": "嚎哭深渊",
+        "description": "1v1 雪球大战模式", 
+        "notes": null 
+    },
+    {
+        "queueId": 73, 
+        "map": "嚎哭深渊",
+        "description": "2v2 雪球大战模式", 
+        "notes": null 
+    },
+    {
+        "queueId": 75, 
+        "map": "召唤师峡谷",
+        "description": "6v6 六杀模式", 
+        "notes": null 
+    },
+    {
+        "queueId": 76, 
+        "map": "召唤师峡谷",
+        "description": "无限火力",
+        "notes": null 
+    },
+    {
+        "queueId": 78, 
+        "map": "嚎哭深渊",
+        "description": "无限火力：镜像模式", 
+        "notes": null 
+    },
+    {
+        "queueId": 83, 
+        "map": "召唤师峡谷",
+        "description": "无限火力人机对战模式", 
+        "notes": null 
+    },
+    {
+        "queueId": 950, 
+        "map": "召唤师峡谷",
+        "description": "末日人机 (所有难度)", 
+        "notes": "原 queueId 91, 92, 93" 
+    },
+    {
+        "queueId": 910, 
+        "map": "水晶之痕",
+        "description": "飞升模式", 
+        "notes": "原 queueId 96"
+    },
+    {
+        "queueId": 98, 
+        "map": "扭曲丛林",
+        "description": "6v6 六杀模式", 
+        "notes": null 
+    },
+    {
+        "queueId": 100, 
+        "map": "屠夫之桥",
+        "description": "5v5 极地大乱斗模式", 
+        "notes": null 
+    },
+    {
+        "queueId": 920, 
+        "map": "嚎哭深渊",
+        "description": "魄罗王传奇模式", 
+        "notes": "原 queueId 300" 
+    },
+    {
+        "queueId": 310, 
+        "map": "召唤师峡谷",
+        "description": "克隆大作战模式", 
+        "notes": null 
+    }, 
+    {
+        "queueId": 313, 
+        "map": "召唤师峡谷",
+        "description": "黑市大乱斗模式", 
+        "notes": null 
+    }, 
+    {
+        "queueId": 940, 
+        "map": "召唤师峡谷",
+        "description": "枢纽攻防战模式", 
+        "notes": "原 queueId 315" 
+    },
+    {
+        "queueId": 317, 
+        "map": "水晶之痕",
+        "description": "绝对不是水晶之痕模式", 
+        "notes": null 
+    },
+    {
+        "queueId": 900,
+        "map": "召唤师峡谷",
+        "description": "随机无限火力模式",
+        "notes": "原 queueId 318"
+    }
+]

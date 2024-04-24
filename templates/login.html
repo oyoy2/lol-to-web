@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>战绩查询登录</title>
+    <style>
+        body {
+          font-family: 'BeaufortforLOL-Bold', sans-serif;
+          background-color: #23272a;
+          color: #f2f2f2;
+          margin: 0;
+          padding: 10px;
+          line-height: 1.4;
+        }
+
+
+
+        .container {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background-color: #181a1c;
+          border: 3px solid #c9b686;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+          width: 50%;
+          margin: 0 auto;
+          text-align: center;
+          border-radius: 20px;
+          background-image: url('/static/bg/bg1.jpg');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+
+        .search-box {
+            width: 70%;
+            margin: 0 auto;
+          align-items: center;
+
+        }
+
+        .search-input {
+
+          flex-grow: 1;
+          padding: 10px 50px;
+          border: 1px solid #c9b686;
+          border-radius: 4px;
+          background-color: #30343a;
+          color: #f2f2f2;
+        }
+
+        .search-button {
+
+          padding: 10px 50px;
+          background-color: #c9b686;
+          color: #23272a;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          margin-left: 10px;
+          font-family: 'BeaufortforLOL-Bold', sans-serif;
+        }
+        .login-button {
+          padding: 10px 20px;
+          background-color: #555;
+          color: #f2f2f2;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          margin-left: 10px;
+          font-family: 'BeaufortforLOL-Bold', sans-serif;
+        }
+        @media (max-width: 768px) {
+          .container {
+            width: 90%;
+            max-width: 400px;
+            padding: 30px; /* 减少 padding */
+          }
+
+          h1 {
+            font-size: 24px; /* 减小标题字号 */
+            margin-bottom: 20px;
+          }
+
+          .search-box {
+            flex-direction: column;
+          }
+
+          .search-input, .search-button, .login-button {
+            font-size: 16px; /* 稍微增大字号 */
+            margin-bottom: 15px;
+            padding: 12px; /* 增加 padding */
+            border-radius: 8px; /* 增大圆角 */
+          }
+
+          .search-button, .login-button {
+            width: 100%;
+          }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+      <h1>登录战绩查询</h1>
+      <div class="search-box" id="emailBox" >
+        <input class="search-input" type="email" id="email" placeholder="请输入邮箱">
+        <button class="search-button" onclick="sendVerificationEmail()">获取验证码</button>
+      </div>
+      <div class="search-box" id="verificationBox" style="display:none;">
+        <input class="search-input" type="text" id="verificationCode" placeholder="请输入验证码">
+        <button class="search-button" onclick="submitVerificationCode()">验证</button>
+      </div>
+
+
+</div>
+    <script>
+                function sendVerificationEmail() {
+          const email = document.getElementById('email').value;
+          fetch('/send_verification_email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+              email: email
+            })
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                alert('验证码已发送至您的邮箱，请注意查收。');
+                document.getElementById('verificationBox').style.display = 'flex';
+                document.getElementById('emailBox').style.display = 'none';
+              } else {
+                alert(data.message);
+              }
+            });
+        }
+        function submitVerificationCode() {
+          const verificationCode = document.getElementById('verificationCode').value;
+          // 使用 POST 方法将验证码提交给 /login 路由
+          fetch('/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+              verification_code: verificationCode
+            })
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                window.location.href = `/`;
+              } else {
+                alert(data.message);
+              }
+            });
+        }
+    </script>
+</body>
+</html>
