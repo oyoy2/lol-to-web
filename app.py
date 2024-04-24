@@ -9,12 +9,12 @@ import test1
 from test1 import find_lcu_prot_and_token
 
 app = Flask(__name__, static_folder='static')
-app.secret_key = '@789123SDJXKKXKJskaldj'  # 设置密钥用于会话加密
+app.secret_key = '@'  # 设置密钥用于会话加密
 app.config['MAIL_SERVER'] = 'smtp.163.com'  # 邮件服务器地址
 app.config['MAIL_PORT'] = 25
 app.config['MAIL_USE_TLS'] = True  # 是否使用 TLS 加密
-app.config['MAIL_USERNAME'] = 'ooyy_2@163.com'  # 邮箱用户名
-app.config['MAIL_PASSWORD'] = 'VJARTMWQGVIYQYJH'  # 邮箱密码
+app.config['MAIL_USERNAME'] = ''  # 邮箱用户名
+app.config['MAIL_PASSWORD'] = ''  # 邮箱密码
 
 mail = Mail(app)
 
